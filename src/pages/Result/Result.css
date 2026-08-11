@@ -1,0 +1,32 @@
+.result-page {
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.result-page-content {
+  text-align: center;
+}
+
+.result-page-content h1 {
+  margin-bottom: 10px;
+}
+
+.result-page-content p {
+  color: #6b7280;
+}
+
+.result-page-content button {
+  margin-top: 20px;
+  padding: 12px 20px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #111827;
+  color: white;
+
+  cursor: pointer;
+}
