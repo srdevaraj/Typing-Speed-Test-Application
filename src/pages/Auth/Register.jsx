@@ -1,7 +1,15 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+
+import {
+  Link,
+  useNavigate,
+} from "react-router-dom";
+
 import "./Register.css";
-import logo from "../../assets/TSTlogo.png"
+
+import logo from "../../assets/TSTlogo.png";
+
+import { register } from "../../services/authService";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -13,10 +21,20 @@ const Register = () => {
     confirmPassword: "",
   });
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [agreeTerms, setAgreeTerms] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] =
+    useState(false);
+
+  const [
+    showConfirmPassword,
+    setShowConfirmPassword,
+  ] = useState(false);
+
+  const [agreeTerms, setAgreeTerms] =
+    useState(false);
+
+  const [isLoading, setIsLoading] =
+    useState(false);
+
   const [error, setError] = useState("");
 
   const handleChange = (event) => {
@@ -47,7 +65,8 @@ const Register = () => {
     if (password.length >= 8) score++;
     if (/[A-Z]/.test(password)) score++;
     if (/[0-9]/.test(password)) score++;
-    if (/[^A-Za-z0-9]/.test(password)) score++;
+    if (/[^A-Za-z0-9]/.test(password))
+      score++;
 
     if (score <= 1) {
       return {
@@ -76,7 +95,8 @@ const Register = () => {
     };
   };
 
-  const passwordStrength = getPasswordStrength();
+  const passwordStrength =
+    getPasswordStrength();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -87,22 +107,33 @@ const Register = () => {
       !formData.password ||
       !formData.confirmPassword
     ) {
-      setError("Please fill in all required fields.");
+      setError(
+        "Please fill in all required fields."
+      );
       return;
     }
 
     if (formData.password.length < 8) {
-      setError("Password must contain at least 8 characters.");
+      setError(
+        "Password must contain at least 8 characters."
+      );
       return;
     }
 
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match.");
+    if (
+      formData.password !==
+      formData.confirmPassword
+    ) {
+      setError(
+        "Passwords do not match."
+      );
       return;
     }
 
     if (!agreeTerms) {
-      setError("Please agree to the Terms of Service.");
+      setError(
+        "Please agree to the Terms of Service."
+      );
       return;
     }
 
@@ -110,19 +141,58 @@ const Register = () => {
     setError("");
 
     try {
-      // Connect your registration API here.
-      // Example:
-      // await registerUser({
-      //   name: formData.name,
-      //   email: formData.email,
-      //   password: formData.password,
-      // });
+      await register({
+        username: formData.name.trim(),
+        email: formData.email.trim(),
+        password: formData.password,
+      });
 
-      await new Promise((resolve) => setTimeout(resolve, 800));
-
-      navigate("/");
+      navigate("/login", {
+        replace: true,
+        state: {
+          registered: true,
+        },
+      });
     } catch (err) {
-      setError("Unable to create your account. Please try again.");
+      console.error(
+        "Registration failed:",
+        err?.response?.data || err
+      );
+
+      const responseData =
+        err?.response?.data;
+
+      if (
+        typeof responseData === "string"
+      ) {
+        setError(responseData);
+      } else if (
+        responseData?.message
+      ) {
+        setError(responseData.message);
+      } else if (
+        responseData?.errors
+      ) {
+        setError(
+          Object.values(
+            responseData.errors
+          ).join(", ")
+        );
+      } else if (
+        err?.response?.status === 409
+      ) {
+        setError(
+          "An account with this email already exists."
+        );
+      } else if (err?.request) {
+        setError(
+          "Unable to connect to the server."
+        );
+      } else {
+        setError(
+          "Unable to create your account. Please try again."
+        );
+      }
     } finally {
       setIsLoading(false);
     }
@@ -130,7 +200,10 @@ const Register = () => {
 
   return (
     <main className="register-page">
-      <div className="register-background">
+      <div
+        className="register-background"
+        aria-hidden="true"
+      >
         <span className="register-orb register-orb-one" />
         <span className="register-orb register-orb-two" />
         <span className="register-orb register-orb-three" />
@@ -138,13 +211,24 @@ const Register = () => {
 
       <section className="register-container">
         <div className="register-brand">
-          <Link to="/" className="register-logo">
-            <img src={logo} className="register-logo-mark" alt="" />
-            <span>Type<span>Fast</span></span>
+          <Link
+            to="/"
+            className="register-logo"
+          >
+            <img
+              src={logo}
+              className="register-logo-mark"
+              alt="TypeFast logo"
+            />
+
+            <span>
+              Type<span>Fast</span>
+            </span>
           </Link>
 
           <p>
-            Start improving your typing speed today.
+            Start improving your typing speed
+            today.
           </p>
         </div>
 
@@ -157,23 +241,37 @@ const Register = () => {
             <h1>Create your account</h1>
 
             <p>
-              Join TypeFast and start tracking your progress.
+              Join TypeFast and start tracking
+              your progress.
             </p>
           </div>
 
           {error && (
-            <div className="register-error" role="alert">
-              <span className="register-error-icon">!</span>
+            <div
+              className="register-error"
+              role="alert"
+            >
+              <span className="register-error-icon">
+                !
+              </span>
+
               <span>{error}</span>
             </div>
           )}
 
-          <form className="register-form" onSubmit={handleSubmit}>
+          <form
+            className="register-form"
+            onSubmit={handleSubmit}
+          >
             <div className="form-group">
-              <label htmlFor="register-name">Full name</label>
+              <label htmlFor="register-name">
+                Full name
+              </label>
 
               <div className="register-input-wrapper">
-                <span className="register-input-icon">●</span>
+                <span className="register-input-icon">
+                  ●
+                </span>
 
                 <input
                   id="register-name"
@@ -189,10 +287,14 @@ const Register = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="register-email">Email address</label>
+              <label htmlFor="register-email">
+                Email address
+              </label>
 
               <div className="register-input-wrapper">
-                <span className="register-input-icon">✉</span>
+                <span className="register-input-icon">
+                  ✉
+                </span>
 
                 <input
                   id="register-email"
@@ -208,14 +310,22 @@ const Register = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="register-password">Password</label>
+              <label htmlFor="register-password">
+                Password
+              </label>
 
               <div className="register-input-wrapper">
-                <span className="register-input-icon">●</span>
+                <span className="register-input-icon">
+                  ●
+                </span>
 
                 <input
                   id="register-password"
-                  type={showPassword ? "text" : "password"}
+                  type={
+                    showPassword
+                      ? "text"
+                      : "password"
+                  }
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
@@ -228,35 +338,47 @@ const Register = () => {
                   type="button"
                   className="register-password-toggle"
                   onClick={() =>
-                    setShowPassword((previous) => !previous)
+                    setShowPassword(
+                      (previous) =>
+                        !previous
+                    )
                   }
                   aria-label={
-                    showPassword ? "Hide password" : "Show password"
+                    showPassword
+                      ? "Hide password"
+                      : "Show password"
                   }
                 >
-                  {showPassword ? "◉" : "◌"}
+                  {showPassword
+                    ? "◉"
+                    : "◌"}
                 </button>
               </div>
 
               {formData.password && (
                 <div className="password-strength">
                   <div className="strength-bars">
-                    {[1, 2, 3, 4].map((bar) => (
-                      <span
-                        key={bar}
-                        className={
-                          bar <= passwordStrength.level
-                            ? "strength-bar active"
-                            : "strength-bar"
-                        }
-                      />
-                    ))}
+                    {[1, 2, 3, 4].map(
+                      (bar) => (
+                        <span
+                          key={bar}
+                          className={
+                            bar <=
+                            passwordStrength.level
+                              ? "strength-bar active"
+                              : "strength-bar"
+                          }
+                        />
+                      )
+                    )}
                   </div>
 
                   <span
                     className={`strength-label strength-${passwordStrength.level}`}
                   >
-                    {passwordStrength.label}
+                    {
+                      passwordStrength.label
+                    }
                   </span>
                 </div>
               )}
@@ -268,13 +390,21 @@ const Register = () => {
               </label>
 
               <div className="register-input-wrapper">
-                <span className="register-input-icon">●</span>
+                <span className="register-input-icon">
+                  ●
+                </span>
 
                 <input
                   id="register-confirm-password"
-                  type={showConfirmPassword ? "text" : "password"}
+                  type={
+                    showConfirmPassword
+                      ? "text"
+                      : "password"
+                  }
                   name="confirmPassword"
-                  value={formData.confirmPassword}
+                  value={
+                    formData.confirmPassword
+                  }
                   onChange={handleChange}
                   placeholder="Confirm your password"
                   autoComplete="new-password"
@@ -285,7 +415,10 @@ const Register = () => {
                   type="button"
                   className="register-password-toggle"
                   onClick={() =>
-                    setShowConfirmPassword((previous) => !previous)
+                    setShowConfirmPassword(
+                      (previous) =>
+                        !previous
+                    )
                   }
                   aria-label={
                     showConfirmPassword
@@ -293,19 +426,23 @@ const Register = () => {
                       : "Show password"
                   }
                 >
-                  {showConfirmPassword ? "◉" : "◌"}
+                  {showConfirmPassword
+                    ? "◉"
+                    : "◌"}
                 </button>
               </div>
 
               {formData.confirmPassword && (
                 <p
                   className={
-                    formData.password === formData.confirmPassword
+                    formData.password ===
+                    formData.confirmPassword
                       ? "password-match success"
                       : "password-match"
                   }
                 >
-                  {formData.password === formData.confirmPassword
+                  {formData.password ===
+                  formData.confirmPassword
                     ? "✓ Passwords match"
                     : "Passwords do not match"}
                 </p>
@@ -317,7 +454,9 @@ const Register = () => {
                 type="checkbox"
                 checked={agreeTerms}
                 onChange={(event) =>
-                  setAgreeTerms(event.target.checked)
+                  setAgreeTerms(
+                    event.target.checked
+                  )
                 }
               />
 
@@ -327,8 +466,14 @@ const Register = () => {
 
               <span>
                 I agree to the{" "}
-                <Link to="/terms">Terms of Service</Link> and{" "}
-                <Link to="/privacy">Privacy Policy</Link>.
+                <Link to="/terms">
+                  Terms of Service
+                </Link>{" "}
+                and{" "}
+                <Link to="/privacy">
+                  Privacy Policy
+                </Link>
+                .
               </span>
             </label>
 
@@ -345,14 +490,19 @@ const Register = () => {
               ) : (
                 <>
                   Create account
-                  <span className="register-arrow">→</span>
+
+                  <span className="register-arrow">
+                    →
+                  </span>
                 </>
               )}
             </button>
           </form>
 
           <div className="register-divider">
-            <span>Already a member?</span>
+            <span>
+              Already a member?
+            </span>
           </div>
 
           <div className="register-footer">
@@ -364,7 +514,8 @@ const Register = () => {
         </div>
 
         <p className="register-bottom-text">
-          Your typing progress will be securely associated with your account.
+          Your typing progress will be securely
+          associated with your account.
         </p>
       </section>
     </main>

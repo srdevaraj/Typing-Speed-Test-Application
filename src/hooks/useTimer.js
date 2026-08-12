@@ -1,7 +1,15 @@
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState,
+} from "react";
 
-export default function useTimer(duration, isRunning, onComplete) {
-  const [timeLeft, setTimeLeft] = useState(duration);
+export default function useTimer(
+  duration,
+  isRunning,
+  onComplete
+) {
+  const [timeLeft, setTimeLeft] =
+    useState(duration);
 
   useEffect(() => {
     setTimeLeft(duration);
@@ -12,20 +20,27 @@ export default function useTimer(duration, isRunning, onComplete) {
       return;
     }
 
-    if (timeLeft <= 0) {
-      onComplete();
-      return;
-    }
-
     const timer = setInterval(() => {
-      setTimeLeft((previousTime) => previousTime - 1);
+      setTimeLeft((previousTime) => {
+        if (previousTime <= 1) {
+          clearInterval(timer);
+
+          onComplete();
+
+          return 0;
+        }
+
+        return previousTime - 1;
+      });
     }, 1000);
 
-    return () => clearInterval(timer);
-  }, [isRunning, timeLeft, onComplete]);
+    return () =>
+      clearInterval(timer);
+  }, [isRunning, onComplete]);
 
   return {
     timeLeft,
-    elapsedTime: duration - timeLeft
+    elapsedTime:
+      duration - timeLeft,
   };
 }

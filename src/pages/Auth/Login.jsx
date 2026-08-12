@@ -1,19 +1,39 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+
+import {
+  Link,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
+
 import "./Login.css";
-import logo from "../../assets/TSTlogo.png"
+
+import logo from "../../assets/TSTlogo.png";
+
+import { login as loginApi } from "../../services/authService";
+
+import { useAuth } from "../../context/AuthContext";
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const { login: loginUser } = useAuth();
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] =
+    useState(false);
+
+  const [rememberMe, setRememberMe] =
+    useState(false);
+
+  const [isLoading, setIsLoading] =
+    useState(false);
+
   const [error, setError] = useState("");
 
   const handleChange = (event) => {
@@ -32,8 +52,13 @@ const Login = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!formData.email.trim() || !formData.password.trim()) {
-      setError("Please enter your email and password.");
+    const email = formData.email.trim();
+    const password = formData.password;
+
+    if (!email || !password) {
+      setError(
+        "Please enter your email and password."
+      );
       return;
     }
 
@@ -41,15 +66,92 @@ const Login = () => {
     setError("");
 
     try {
-      // Connect your authentication API here.
-      // Example:
-      // const response = await loginUser(formData);
+      const response = await loginApi({
+        email,
+        password,
+      });
 
-      await new Promise((resolve) => setTimeout(resolve, 800));
+      console.log(
+        "Login response:",
+        response
+      );
 
-      navigate("/");
+      if (!response?.token) {
+        throw new Error(
+          "Authentication token was not received."
+        );
+      }
+
+      /**
+       * IMPORTANT:
+       *
+       * Save token AND update AuthContext.
+       */
+      loginUser(
+        response.token,
+        rememberMe
+      );
+
+      console.log(
+        "Authentication successful."
+      );
+
+      /**
+       * Return to the page user originally
+       * requested, if available.
+       */
+      const from =
+        location.state?.from?.pathname ||
+        "/";
+
+      navigate(from, {
+        replace: true,
+      });
+
     } catch (err) {
-      setError("Unable to sign in. Please try again.");
+      console.error(
+        "Login failed:",
+        err?.response?.data || err
+      );
+
+      const responseData =
+        err?.response?.data;
+
+      if (
+        typeof responseData === "string"
+      ) {
+        setError(responseData);
+      } else if (
+        responseData?.message
+      ) {
+        setError(responseData.message);
+      } else if (
+        err?.response?.status === 400
+      ) {
+        setError(
+          "Invalid login request."
+        );
+      } else if (
+        err?.response?.status === 401
+      ) {
+        setError(
+          "Invalid email or password."
+        );
+      } else if (
+        err?.response?.status === 403
+      ) {
+        setError(
+          "You are not authorized to login."
+        );
+      } else if (err?.request) {
+        setError(
+          "Unable to connect to the server."
+        );
+      } else {
+        setError(
+          "Unable to sign in. Please try again."
+        );
+      }
     } finally {
       setIsLoading(false);
     }
@@ -57,7 +159,10 @@ const Login = () => {
 
   return (
     <main className="auth-page">
-      <div className="auth-background">
+      <div
+        className="auth-background"
+        aria-hidden="true"
+      >
         <span className="auth-orb auth-orb-one" />
         <span className="auth-orb auth-orb-two" />
         <span className="auth-orb auth-orb-three" />
@@ -65,13 +170,24 @@ const Login = () => {
 
       <section className="auth-container">
         <div className="auth-brand">
-          <Link to="/" className="auth-logo">
-            <img src={logo} className="auth-logo-mark" alt="" />
-            <span>Type<span>Fast</span></span>
+          <Link
+            to="/"
+            className="auth-logo"
+          >
+            <img
+              src={logo}
+              className="auth-logo-mark"
+              alt="TypeFast logo"
+            />
+
+            <span>
+              Type<span>Fast</span>
+            </span>
           </Link>
 
           <p className="auth-brand-text">
-            Improve your typing speed. Track your progress. Get faster.
+            Improve your typing speed. Track
+            your progress. Get faster.
           </p>
         </div>
 
@@ -84,23 +200,37 @@ const Login = () => {
             <h1>Welcome back</h1>
 
             <p>
-              Sign in to continue your typing journey.
+              Sign in to continue your typing
+              journey.
             </p>
           </div>
 
           {error && (
-            <div className="auth-error" role="alert">
-              <span className="auth-error-icon">!</span>
+            <div
+              className="auth-error"
+              role="alert"
+            >
+              <span className="auth-error-icon">
+                !
+              </span>
+
               <span>{error}</span>
             </div>
           )}
 
-          <form className="auth-form" onSubmit={handleSubmit}>
+          <form
+            className="auth-form"
+            onSubmit={handleSubmit}
+          >
             <div className="form-group">
-              <label htmlFor="login-email">Email address</label>
+              <label htmlFor="login-email">
+                Email address
+              </label>
 
               <div className="input-wrapper">
-                <span className="input-icon">✉</span>
+                <span className="input-icon">
+                  ✉
+                </span>
 
                 <input
                   id="login-email"
@@ -117,23 +247,35 @@ const Login = () => {
 
             <div className="form-group">
               <div className="form-label-row">
-                <label htmlFor="login-password">Password</label>
+                <label htmlFor="login-password">
+                  Password
+                </label>
 
                 <button
                   type="button"
                   className="forgot-password"
-                  onClick={() => alert("Password reset will be available soon.")}
+                  onClick={() =>
+                    alert(
+                      "Password reset will be available soon."
+                    )
+                  }
                 >
                   Forgot password?
                 </button>
               </div>
 
               <div className="input-wrapper">
-                <span className="input-icon">●</span>
+                <span className="input-icon">
+                  ●
+                </span>
 
                 <input
                   id="login-password"
-                  type={showPassword ? "text" : "password"}
+                  type={
+                    showPassword
+                      ? "text"
+                      : "password"
+                  }
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
@@ -145,12 +287,21 @@ const Login = () => {
                 <button
                   type="button"
                   className="password-toggle"
-                  onClick={() => setShowPassword((previous) => !previous)}
+                  onClick={() =>
+                    setShowPassword(
+                      (previous) =>
+                        !previous
+                    )
+                  }
                   aria-label={
-                    showPassword ? "Hide password" : "Show password"
+                    showPassword
+                      ? "Hide password"
+                      : "Show password"
                   }
                 >
-                  {showPassword ? "◉" : "◌"}
+                  {showPassword
+                    ? "◉"
+                    : "◌"}
                 </button>
               </div>
             </div>
@@ -159,14 +310,20 @@ const Login = () => {
               <input
                 type="checkbox"
                 checked={rememberMe}
-                onChange={(event) => setRememberMe(event.target.checked)}
+                onChange={(event) =>
+                  setRememberMe(
+                    event.target.checked
+                  )
+                }
               />
 
               <span className="custom-checkbox">
                 {rememberMe && "✓"}
               </span>
 
-              <span>Remember me</span>
+              <span>
+                Remember me
+              </span>
             </label>
 
             <button
@@ -182,7 +339,10 @@ const Login = () => {
               ) : (
                 <>
                   Sign in
-                  <span className="submit-arrow">→</span>
+
+                  <span className="submit-arrow">
+                    →
+                  </span>
                 </>
               )}
             </button>
@@ -194,16 +354,24 @@ const Login = () => {
 
           <div className="auth-footer">
             <p>
-              Don't have an account?
-              <Link to="/register"> Create account</Link>
+              Don't have an account?{" "}
+              <Link to="/register">
+                Create account
+              </Link>
             </p>
           </div>
         </div>
 
         <p className="auth-bottom-text">
           By continuing, you agree to our{" "}
-          <Link to="/terms">Terms of Service</Link> and{" "}
-          <Link to="/privacy">Privacy Policy</Link>.
+          <Link to="/terms">
+            Terms of Service
+          </Link>{" "}
+          and{" "}
+          <Link to="/privacy">
+            Privacy Policy
+          </Link>
+          .
         </p>
       </section>
     </main>

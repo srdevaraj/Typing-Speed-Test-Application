@@ -7,11 +7,13 @@ export const passages = [
 
   "Success in software development comes from understanding fundamentals and building real projects. Practice every day, learn from mistakes, and keep improving your skills.",
 
-  "A typing speed test measures how quickly and accurately you can enter text. The best results come from maintaining a steady rhythm while avoiding unnecessary mistakes."
+  "A typing speed test measures how quickly and accurately you can enter text. The best results come from maintaining a steady rhythm while avoiding unnecessary mistakes.",
 ];
 
 export const getRandomPassage = () => {
-  const index = Math.floor(Math.random() * passages.length);
+  const index = Math.floor(
+    Math.random() * passages.length
+  );
 
   return passages[index];
 };

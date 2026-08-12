@@ -1,7 +1,26 @@
+import { useNavigate } from "react-router-dom";
+
+import { useAuth } from "../../context/AuthContext";
+
 import "./Header.css";
+
 import logo from "../../assets/TSTlogo.png";
 
 export default function Header() {
+  const navigate = useNavigate();
+
+  const {
+    logout,
+  } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+
+    navigate("/login", {
+      replace: true,
+    });
+  };
+
   return (
     <header className="header">
       <div className="header-container">
@@ -23,9 +42,29 @@ export default function Header() {
           </div>
         </div>
 
-        <div className="header-badge">
-          <span className="status-dot"></span>
-          Practice Mode
+        <div className="header-actions">
+          <button
+            type="button"
+            className="header-results"
+            onClick={() =>
+              navigate("/result")
+            }
+          >
+            Results
+          </button>
+
+          <div className="header-badge">
+            <span className="status-dot" />
+            Practice Mode
+          </div>
+
+          <button
+            type="button"
+            className="header-logout"
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
         </div>
       </div>
     </header>

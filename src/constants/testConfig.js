@@ -1,4 +1,9 @@
-export const TEST_DURATIONS = [15, 30, 60, 120];
+export const TEST_DURATIONS = [
+  15,
+  30,
+  60,
+  120,
+];
 
 export const DEFAULT_TEST_DURATION = 60;
 

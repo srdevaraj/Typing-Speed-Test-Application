@@ -1,18 +1,55 @@
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api";
+import apiClient from "./apiClient";
 
-export const saveResult = async (result) => {
-  const response = await fetch(`${API_BASE_URL}/results`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(result)
-  });
+/**
+ * Save completed typing test.
+ *
+ * POST /api/results
+ */
+export const saveResult = async (resultData) => {
+  console.log(
+    "========== SAVE RESULT =========="
+  );
 
-  if (!response.ok) {
-    throw new Error("Failed to save typing test result");
-  }
+  console.log(
+    "Result data:",
+    resultData
+  );
 
-  return response.json();
+  const response = await apiClient.post(
+    "/results",
+    {
+      wpm: resultData.wpm,
+      accuracy: resultData.accuracy,
+      correctCharacters:
+        resultData.correctCharacters,
+      incorrectCharacters:
+        resultData.incorrectCharacters,
+      duration: resultData.duration,
+      passage: resultData.passage,
+    }
+  );
+
+  console.log(
+    "Result saved:",
+    response.data
+  );
+
+  console.log(
+    "================================="
+  );
+
+  return response.data;
+};
+
+/**
+ * Get logged-in user's results.
+ *
+ * GET /api/results
+ */
+export const getMyResults = async () => {
+  const response = await apiClient.get(
+    "/results"
+  );
+
+  return response.data;
 };
