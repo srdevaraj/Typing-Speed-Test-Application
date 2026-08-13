@@ -1,16 +1,483 @@
+/* =========================================================
+   TIMER
+========================================================= */
+
 .timer {
+  position: relative;
+
+  width: 126px;
+  min-width: 126px;
+
+  height: 58px;
+
   display: flex;
-  flex-direction: column;
+
   align-items: center;
-  gap: 4px;
+
+  gap: 10px;
+
+  padding:
+    8px
+    11px;
+
+  overflow: hidden;
+
+  border:
+    1px solid
+    rgba(148, 163, 184, 0.2);
+
+  border-radius: 15px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #172033,
+      #0f172a
+    );
+
+  box-shadow:
+    0 10px 28px
+    rgba(15, 23, 42, 0.18),
+    inset 0 1px 0
+    rgba(255, 255, 255, 0.05);
+
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
+}
+
+
+/* =========================================================
+   TIMER TOP HIGHLIGHT
+========================================================= */
+
+.timer::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 12%;
+
+  width: 76%;
+  height: 1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.18),
+      transparent
+    );
+}
+
+
+/* =========================================================
+   TIMER ICON
+========================================================= */
+
+.timer-icon {
+  width: 32px;
+  height: 32px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border:
+    1px solid
+    rgba(129, 140, 248, 0.13);
+
+  border-radius: 9px;
+
+  background:
+    rgba(99, 102, 241, 0.11);
+
+  color: #818cf8;
+
+  transition:
+    color 0.3s ease,
+    background 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.timer-icon svg {
+  width: 17px;
+  height: 17px;
+
+  stroke:
+    currentColor;
+
+  stroke-width: 1.7;
+
+  stroke-linecap: round;
+
+  stroke-linejoin: round;
+}
+
+
+/* =========================================================
+   TIMER CONTENT
+========================================================= */
+
+.timer-content {
+  min-width: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  flex: 1;
 }
 
 .timer-label {
-  font-size: 13px;
-  color: #6b7280;
+  margin-bottom: 3px;
+
+  color: #64748b;
+
+  font-size: 7px;
+
+  line-height: 1;
+
+  font-weight: 800;
+
+  letter-spacing: 1.4px;
 }
 
 .timer-value {
-  font-size: 28px;
-  font-weight: 700;
+  display: flex;
+
+  align-items: baseline;
+
+  white-space: nowrap;
+
+  line-height: 1;
+
+  font-variant-numeric:
+    tabular-nums;
+
+  color: #f8fafc;
+
+  transition:
+    color 0.3s ease;
+}
+
+.timer-number {
+  display: inline-block;
+
+  min-width: 28px;
+
+  font-size: 20px;
+
+  font-weight: 800;
+
+  letter-spacing: -0.7px;
+
+  text-align: left;
+}
+
+.timer-unit {
+  margin-left: 3px;
+
+  color: #64748b;
+
+  font-size: 8px;
+
+  font-weight: 650;
+
+  letter-spacing: 0;
+}
+
+
+/* =========================================================
+   TICK ANIMATION
+========================================================= */
+
+.timer-value-tick {
+  animation:
+    timerNumberTick
+    0.28s
+    cubic-bezier(
+      0.16,
+      1,
+      0.3,
+      1
+    );
+}
+
+@keyframes timerNumberTick {
+  0% {
+    opacity: 0.5;
+
+    transform:
+      translateY(-3px)
+      scale(0.94);
+  }
+
+  45% {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1.07);
+  }
+
+  100% {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+
+/* =========================================================
+   PROGRESS
+========================================================= */
+
+.timer-progress {
+  position: absolute;
+
+  right: 10px;
+  bottom: 9px;
+
+  left: 10px;
+
+  height: 2px;
+}
+
+.timer-progress-track {
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background:
+    rgba(255, 255, 255, 0.07);
+}
+
+.timer-progress-value {
+  height: 100%;
+
+  border-radius: inherit;
+
+  background:
+    linear-gradient(
+      90deg,
+      #6366f1,
+      #818cf8
+    );
+
+  transition:
+    width 0.8s
+    linear,
+    background 0.3s ease;
+}
+
+
+/* =========================================================
+   STARTED
+========================================================= */
+
+.timer-started {
+  border-color:
+    rgba(99, 102, 241, 0.28);
+
+  box-shadow:
+    0 10px 28px
+    rgba(15, 23, 42, 0.2),
+    0 0 0 1px
+    rgba(99, 102, 241, 0.035),
+    inset 0 1px 0
+    rgba(255, 255, 255, 0.05);
+}
+
+
+/* =========================================================
+   IDLE
+========================================================= */
+
+.timer-idle {
+  opacity: 0.9;
+}
+
+
+/* =========================================================
+   WARNING
+========================================================= */
+
+.timer-warning {
+  border-color:
+    rgba(245, 158, 11, 0.35);
+
+  animation:
+    timerWarning
+    1.6s
+    ease-in-out
+    infinite;
+}
+
+.timer-warning .timer-icon {
+  border-color:
+    rgba(245, 158, 11, 0.18);
+
+  background:
+    rgba(245, 158, 11, 0.1);
+
+  color: #fbbf24;
+}
+
+.timer-warning .timer-number {
+  color: #fbbf24;
+}
+
+.timer-warning
+  .timer-progress-value {
+  background:
+    linear-gradient(
+      90deg,
+      #f59e0b,
+      #fbbf24
+    );
+}
+
+@keyframes timerWarning {
+  0%,
+  100% {
+    box-shadow:
+      0 10px 28px
+      rgba(15, 23, 42, 0.18),
+      0 0 0 0
+      rgba(245, 158, 11, 0);
+  }
+
+  50% {
+    box-shadow:
+      0 10px 32px
+      rgba(15, 23, 42, 0.2),
+      0 0 0 3px
+      rgba(245, 158, 11, 0.045);
+  }
+}
+
+
+/* =========================================================
+   CRITICAL
+========================================================= */
+
+.timer-critical {
+  border-color:
+    rgba(239, 68, 68, 0.4);
+
+  animation:
+    timerCritical
+    0.8s
+    ease-in-out
+    infinite;
+}
+
+.timer-critical .timer-icon {
+  border-color:
+    rgba(239, 68, 68, 0.18);
+
+  background:
+    rgba(239, 68, 68, 0.1);
+
+  color: #f87171;
+}
+
+.timer-critical .timer-number {
+  color: #f87171;
+}
+
+.timer-critical
+  .timer-progress-value {
+  background:
+    linear-gradient(
+      90deg,
+      #ef4444,
+      #f87171
+    );
+}
+
+@keyframes timerCritical {
+  0%,
+  100% {
+    transform:
+      scale(1);
+
+    box-shadow:
+      0 10px 28px
+      rgba(15, 23, 42, 0.18),
+      0 0 0 0
+      rgba(239, 68, 68, 0);
+  }
+
+  50% {
+    transform:
+      scale(1.025);
+
+    box-shadow:
+      0 12px 32px
+      rgba(15, 23, 42, 0.2),
+      0 0 0 3px
+      rgba(239, 68, 68, 0.055);
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+  .timer {
+    width: 100%;
+    min-width: 0;
+
+    height: 56px;
+
+    padding:
+      8px
+      12px;
+  }
+
+  .timer-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .timer-number {
+    font-size: 19px;
+  }
+
+  .timer-progress {
+    right: 12px;
+    bottom: 8px;
+    left: 12px;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .timer,
+  .timer-value-tick,
+  .timer-progress-value {
+    animation: none !important;
+
+    transition: none !important;
+  }
 }

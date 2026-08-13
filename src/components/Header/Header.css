@@ -1,146 +1,998 @@
-.header {
-  width: 100%;
-  padding: 16px 0;
+/* =========================================================
+   HEADER
+========================================================= */
 
-  background: #071426;
-  border-bottom: 1px solid #172a42;
+.header {
+  position: relative;
+
+  width: 100%;
+  height: 76px;
+
+  display: flex;
+  align-items: center;
+
+  background:
+    linear-gradient(
+      180deg,
+      #071426 0%,
+      #08172a 100%
+    );
+
+  border-bottom: 1px solid
+    rgba(148, 163, 184, 0.12);
+
+  color: #ffffff;
+
+  z-index: 100;
+
+  isolation: isolate;
+
+  box-shadow:
+    0 8px 30px rgba(2, 8, 23, 0.08);
 }
 
+
+/* =========================================================
+   AMBIENT HEADER GLOW
+========================================================= */
+
+.header-background-glow {
+  position: absolute;
+
+  top: -100px;
+  left: 18%;
+
+  width: 340px;
+  height: 180px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      ellipse,
+      rgba(32, 201, 255, 0.12),
+      transparent 70%
+    );
+
+  filter: blur(20px);
+
+  pointer-events: none;
+
+  animation:
+    headerGlow
+    8s
+    ease-in-out
+    infinite;
+}
+
+@keyframes headerGlow {
+  0%,
+  100% {
+    transform:
+      translateX(0)
+      scale(1);
+    opacity: 0.65;
+  }
+
+  50% {
+    transform:
+      translateX(80px)
+      scale(1.12);
+    opacity: 1;
+  }
+}
+
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
 .header-container {
-  width: min(1100px, 90%);
+  position: relative;
+
+  width: min(
+    1100px,
+    90%
+  );
+
+  height: 100%;
+
   margin: 0 auto;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  gap: 30px;
 }
 
+
+/* =========================================================
+   BRAND
+========================================================= */
+
 .brand {
+  position: relative;
+
+  display: inline-flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+
+  color: inherit;
+
+  cursor: pointer;
+
+  font-family: inherit;
+
+  text-align: left;
+
+  outline: none;
+}
+
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.brand-logo-wrapper {
+  position: relative;
+
+  width: 46px;
+  height: 46px;
+
+  flex-shrink: 0;
+
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: center;
+
+  border-radius: 13px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.09),
+      rgba(255, 255, 255, 0.025)
+    );
+
+  border: 1px solid
+    rgba(255, 255, 255, 0.11);
+
+  box-shadow:
+    0 8px 22px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0
+      rgba(255, 255, 255, 0.08);
+
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .brand-logo {
-  width: 58px;
-  height: 58px;
+  position: relative;
+
+  width: 34px;
+  height: 34px;
+
   object-fit: contain;
-  border-radius: 12px;
+
+  z-index: 2;
+
+  transition:
+    transform 0.35s
+    cubic-bezier(
+      0.16,
+      1,
+      0.3,
+      1
+    );
 }
+
+
+/* Animated ring */
+
+.brand-logo-ring {
+  position: absolute;
+
+  inset: -4px;
+
+  border-radius: 16px;
+
+  border: 1px solid
+    rgba(32, 201, 255, 0.18);
+
+  opacity: 0;
+
+  transform: scale(0.85);
+
+  transition:
+    opacity 0.3s ease,
+    transform 0.35s ease;
+
+  pointer-events: none;
+}
+
+
+/* Brand hover */
+
+.brand:hover
+  .brand-logo-wrapper {
+  transform:
+    translateY(-2px)
+    rotate(-1deg);
+
+  border-color:
+    rgba(32, 201, 255, 0.3);
+
+  box-shadow:
+    0 10px 28px
+      rgba(0, 0, 0, 0.25),
+    0 0 22px
+      rgba(32, 201, 255, 0.08);
+}
+
+.brand:hover .brand-logo {
+  transform:
+    scale(1.07);
+}
+
+.brand:hover
+  .brand-logo-ring {
+  opacity: 1;
+
+  transform:
+    scale(1.05);
+}
+
+
+/* =========================================================
+   BRAND CONTENT
+========================================================= */
 
 .brand-content {
   display: flex;
+
   flex-direction: column;
+
+  justify-content: center;
+
   gap: 2px;
 }
 
 .brand-title {
   margin: 0;
 
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
+  color: #f8fafc;
 
-  color: #ffffff;
+  font-size: 21px;
+
+  line-height: 1;
+
+  font-weight: 800;
+
+  letter-spacing: -0.7px;
 }
 
 .brand-title span {
-  color: #20c9ff;
+  background:
+    linear-gradient(
+      90deg,
+      #20c9ff,
+      #6366f1
+    );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  color: transparent;
 }
 
 .header-subtitle {
-  margin: 0;
+  margin: 4px 0 0;
 
-  color: #8fa4bd;
-  font-size: 13px;
-  font-weight: 400;
+  color: #71859e;
+
+  font-size: 10px;
+
+  line-height: 1;
+
+  font-weight: 500;
+
+  letter-spacing: 0.15px;
 }
 
-.header-badge {
+
+/* =========================================================
+   HEADER ACTIONS
+========================================================= */
+
+.header-actions {
   display: flex;
   align-items: center;
+
+  gap: 10px;
+}
+
+
+/* =========================================================
+   RESULTS NAVIGATION
+========================================================= */
+
+.header-nav-button {
+  position: relative;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
   gap: 8px;
 
-  padding: 7px 12px;
+  height: 40px;
 
-  border: 1px solid #1d3855;
-  border-radius: 20px;
+  padding: 0 13px;
 
-  background: #0b1c31;
+  border: 1px solid
+    rgba(148, 163, 184, 0.13);
 
-  color: #9db3ca;
+  border-radius: 11px;
+
+  background:
+    rgba(255, 255, 255, 0.035);
+
+  color: #a7b7c9;
+
+  cursor: pointer;
+
+  font-family: inherit;
+
   font-size: 12px;
-  font-weight: 500;
+
+  font-weight: 700;
+
+  transition:
+    color 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
-.status-dot {
-  width: 7px;
-  height: 7px;
+.header-nav-button:hover {
+  color: #ffffff;
+
+  background:
+    rgba(255, 255, 255, 0.075);
+
+  border-color:
+    rgba(32, 201, 255, 0.2);
+
+  transform:
+    translateY(-1px);
+
+  box-shadow:
+    0 7px 18px
+      rgba(0, 0, 0, 0.14);
+}
+
+
+/* Active */
+
+.header-nav-button.active {
+  color: #ffffff;
+
+  border-color:
+    rgba(32, 201, 255, 0.24);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(32, 201, 255, 0.1),
+      rgba(99, 102, 241, 0.1)
+    );
+
+  box-shadow:
+    inset 0 1px 0
+      rgba(255, 255, 255, 0.04),
+    0 0 20px
+      rgba(32, 201, 255, 0.04);
+}
+
+
+/* Active bottom indicator */
+
+.header-nav-button.active::after {
+  content: "";
+
+  position: absolute;
+
+  left: 18px;
+  right: 18px;
+
+  bottom: -17px;
+
+  height: 2px;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #20c9ff,
+      #6366f1
+    );
+
+  box-shadow:
+    0 0 10px
+      rgba(32, 201, 255, 0.45);
+
+  animation:
+    navIndicator
+    0.35s
+    ease
+    both;
+}
+
+@keyframes navIndicator {
+  from {
+    opacity: 0;
+    transform: scaleX(0.5);
+  }
+
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+
+/* =========================================================
+   NAV ICON
+========================================================= */
+
+.nav-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 17px;
+  height: 17px;
+}
+
+.nav-icon svg {
+  width: 16px;
+  height: 16px;
+
+  fill: none;
+
+  stroke: currentColor;
+
+  stroke-width: 1.8;
+
+  stroke-linecap: round;
+
+  stroke-linejoin: round;
+}
+
+
+/* =========================================================
+   DIVIDER
+========================================================= */
+
+.header-divider {
+  width: 1px;
+  height: 25px;
+
+  margin: 0 3px;
+
+  background:
+    rgba(148, 163, 184, 0.13);
+}
+
+
+/* =========================================================
+   USER PROFILE
+========================================================= */
+
+.user-profile {
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  min-width: 105px;
+
+  padding: 5px 9px 5px 5px;
+
+  border: 1px solid
+    rgba(148, 163, 184, 0.11);
+
+  border-radius: 12px;
+
+  background:
+    rgba(255, 255, 255, 0.035);
+
+  transition:
+    border-color 0.25s ease,
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.user-profile:hover {
+  background:
+    rgba(255, 255, 255, 0.055);
+
+  border-color:
+    rgba(148, 163, 184, 0.18);
+
+  transform:
+    translateY(-1px);
+}
+
+
+/* =========================================================
+   AVATAR
+========================================================= */
+
+.user-avatar {
+  position: relative;
+
+  width: 29px;
+  height: 29px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 9px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #20c9ff,
+      #6366f1
+    );
+
+  color: #ffffff;
+
+  font-size: 12px;
+
+  font-weight: 800;
+
+  box-shadow:
+    0 4px 12px
+      rgba(32, 201, 255, 0.16);
+}
+
+
+/* Online dot */
+
+.user-online-dot {
+  position: absolute;
+
+  right: -2px;
+  bottom: -2px;
+
+  width: 8px;
+  height: 8px;
 
   border-radius: 50%;
-  background: #20c9ff;
 
-  box-shadow: 0 0 8px #20c9ff;
+  background: #22c55e;
+
+  border: 2px solid #08172a;
+
+  box-shadow:
+    0 0 8px
+      rgba(34, 197, 94, 0.55);
+
+  animation:
+    onlinePulse
+    2.5s
+    ease-in-out
+    infinite;
 }
 
-/* Responsive */
-@media (max-width: 600px) {
+@keyframes onlinePulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0
+        rgba(34, 197, 94, 0);
+  }
+
+  50% {
+    box-shadow:
+      0 0 8px
+        rgba(34, 197, 94, 0.55);
+  }
+}
+
+
+/* =========================================================
+   USER INFO
+========================================================= */
+
+.user-info {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 2px;
+
+  min-width: 0;
+}
+
+.user-label {
+  color: #5f738b;
+
+  font-size: 8px;
+
+  line-height: 1;
+
+  font-weight: 700;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.7px;
+}
+
+.user-name {
+  max-width: 80px;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+  color: #d6e0ea;
+
+  font-size: 11px;
+
+  line-height: 1.2;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+.header-logout {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  height: 40px;
+
+  padding: 0 13px;
+
+  border: 1px solid
+    rgba(248, 113, 113, 0.14);
+
+  border-radius: 11px;
+
+  background:
+    rgba(248, 113, 113, 0.035);
+
+  color: #d98989;
+
+  cursor: pointer;
+
+  font-family: inherit;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  transition:
+    color 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.header-logout:hover {
+  color: #fca5a5;
+
+  background:
+    rgba(248, 113, 113, 0.09);
+
+  border-color:
+    rgba(248, 113, 113, 0.28);
+
+  transform:
+    translateY(-1px);
+
+  box-shadow:
+    0 7px 18px
+      rgba(239, 68, 68, 0.08);
+}
+
+.header-logout:active {
+  transform:
+    translateY(0)
+    scale(0.98);
+}
+
+
+/* =========================================================
+   LOGOUT ICON
+========================================================= */
+
+.logout-icon {
+  display: flex;
+
+  width: 16px;
+  height: 16px;
+}
+
+.logout-icon svg {
+  width: 16px;
+  height: 16px;
+
+  fill: none;
+
+  stroke: currentColor;
+
+  stroke-width: 1.8;
+
+  stroke-linecap: round;
+
+  stroke-linejoin: round;
+
+  transition:
+    transform 0.3s
+    cubic-bezier(
+      0.16,
+      1,
+      0.3,
+      1
+    );
+}
+
+.header-logout:hover
+  .logout-icon svg {
+  transform:
+    translateX(2px);
+}
+
+
+/* =========================================================
+   FOCUS STATES
+========================================================= */
+
+.brand:focus-visible,
+.header-nav-button:focus-visible,
+.header-logout:focus-visible {
+  outline: none;
+
+  box-shadow:
+    0 0 0 3px
+      rgba(32, 201, 255, 0.18);
+}
+
+
+/* =========================================================
+   RESPONSIVE — TABLET
+========================================================= */
+
+@media (max-width: 800px) {
   .header {
-    padding: 12px 0;
+    height: 70px;
   }
 
   .header-container {
     width: 92%;
-  }
 
-  .brand-logo {
-    width: 48px;
-    height: 48px;
-  }
-
-  .brand-title {
-    font-size: 20px;
+    gap: 15px;
   }
 
   .header-subtitle {
-    font-size: 11px;
-  }
-
-  .header-badge {
     display: none;
   }
-}
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+
+  .brand-logo-wrapper {
+    width: 42px;
+    height: 42px;
+
+    border-radius: 11px;
+  }
+
+  .brand-logo {
+    width: 31px;
+    height: 31px;
+  }
+
+  .brand-title {
+    font-size: 19px;
+  }
+
+  .header-actions {
+    gap: 7px;
+  }
+
+  .header-divider {
+    margin: 0 1px;
+  }
+
+  .user-profile {
+    min-width: auto;
+  }
+
+  .user-info {
+    display: none;
+  }
+
+  .user-profile {
+    padding: 4px;
+  }
 }
 
-.header-results,
-.header-logout {
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.05);
-  color: inherit;
-  padding: 9px 16px;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  color: white;
+
+/* =========================================================
+   RESPONSIVE — MOBILE
+========================================================= */
+
+@media (max-width: 560px) {
+  .header {
+    height: 64px;
+  }
+
+  .header-container {
+    width: 94%;
+  }
+
+  .brand {
+    gap: 9px;
+  }
+
+  .brand-logo-wrapper {
+    width: 38px;
+    height: 38px;
+
+    border-radius: 10px;
+  }
+
+  .brand-logo {
+    width: 28px;
+    height: 28px;
+  }
+
+  .brand-title {
+    font-size: 17px;
+
+    letter-spacing: -0.5px;
+  }
+
+  .header-actions {
+    gap: 5px;
+  }
+
+  .header-nav-button {
+    width: 38px;
+    height: 38px;
+
+    padding: 0;
+
+    border-radius: 10px;
+  }
+
+  .nav-text {
+    display: none;
+  }
+
+  .header-divider {
+    display: none;
+  }
+
+  .user-profile {
+    width: 38px;
+    height: 38px;
+
+    padding: 3px;
+
+    justify-content: center;
+
+    border-radius: 10px;
+  }
+
+  .user-avatar {
+    width: 29px;
+    height: 29px;
+  }
+
+  .header-logout {
+    width: 38px;
+    height: 38px;
+
+    padding: 0;
+
+    border-radius: 10px;
+  }
+
+  .logout-text {
+    display: none;
+  }
+
+  .header-nav-button.active::after {
+    left: 10px;
+    right: 10px;
+
+    bottom: -12px;
+  }
 }
 
-.header-results:hover,
-.header-logout:hover {
-  transform: translateY(-1px);
-  background: rgba(255, 255, 255, 0.1);
+
+/* =========================================================
+   VERY SMALL DEVICES
+========================================================= */
+
+@media (max-width: 360px) {
+  .brand-title {
+    font-size: 16px;
+  }
+
+  .brand-logo-wrapper {
+    width: 35px;
+    height: 35px;
+  }
+
+  .brand-logo {
+    width: 25px;
+    height: 25px;
+  }
+
+  .header-nav-button,
+  .header-logout {
+    width: 35px;
+    height: 35px;
+  }
+
+  .user-profile {
+    width: 35px;
+    height: 35px;
+  }
+
+  .user-avatar {
+    width: 27px;
+    height: 27px;
+  }
 }
 
-.header-logout {
-  border-color: rgba(255, 80, 80, 0.25);
-  color: rgb(249, 112, 112);
-}
 
-.header-logout:hover {
-  background: rgba(255, 80, 80, 0.1);
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .header-background-glow,
+  .user-online-dot,
+  .header-nav-button.active::after {
+    animation: none !important;
+  }
+
+  .brand-logo-wrapper,
+  .brand-logo,
+  .brand-logo-ring,
+  .header-nav-button,
+  .user-profile,
+  .header-logout,
+  .logout-icon svg {
+    transition: none !important;
+  }
 }
