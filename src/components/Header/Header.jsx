@@ -11,6 +11,7 @@ export default function Header() {
 
   const {
     logout,
+    user,
   } = useAuth();
 
   const handleLogout = () => {
@@ -24,6 +25,7 @@ export default function Header() {
   return (
     <header className="header">
       <div className="header-container">
+
         <div className="brand">
           <img
             src={logo}
@@ -43,21 +45,23 @@ export default function Header() {
         </div>
 
         <div className="header-actions">
+
+          {/* Results */}
           <button
             type="button"
             className="header-results"
-            onClick={() =>
-              navigate("/result")
-            }
+            onClick={() => navigate("/result")}
           >
             Results
           </button>
 
+          {/* Logged-in Username */}
           <div className="header-badge">
             <span className="status-dot" />
-            Practice Mode
+            {user?.username || "User"}
           </div>
 
+          {/* Logout */}
           <button
             type="button"
             className="header-logout"
@@ -65,6 +69,7 @@ export default function Header() {
           >
             Logout
           </button>
+
         </div>
       </div>
     </header>

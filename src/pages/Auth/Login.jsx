@@ -89,6 +89,8 @@ const Login = () => {
        */
       loginUser(
         response.token,
+        response.username,
+        response.email,
         rememberMe
       );
 
